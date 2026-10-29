@@ -17,6 +17,7 @@ class Task:
     description:str=""
     priority:Priority=Priority.MEDIUM
     status:TaskStatus=TaskStatus.TODO
+    id:int|None=None
 
     def __post_init__(self)->None:
 
