@@ -53,3 +53,82 @@
 1. lancement du test et rendu
 
 
+
+# partie 3
+
+## EXercice B: Reponse avec mes mots propres
+
+1. Quelle est la différence entre Task et TaskModel ? Pourquoi avons-nous choisi de conserver les deux ?
+
+    - la difference entre ``Task`` et ``TaskModel`` est que Task est notre model metier de notre entité alors que TaskModel est la classe qui creer notre table en BD en s'inspirant de Task , avec l'orm choisir, c'est à dire sqlalchemy dans notre cas
+
+2. Que se passe-t-il lorsque nous appelons ``session.add(record)`` ? Et pourquoi avons-nous ensuite appelé ``session.flush()`` ? 
+
+    - lorsque nous faisons ``session.add(record)`` on prepare les donné qui vont etre persité et par la suite quant on fait ``session.flus()``... jai pas bien compris cette ligne
+
+    ### correction
+        | Instruction |	Fonction |
+        | session.add() |	Ajoute l'objet à l'unité de travail de la session |
+        | session.flush() |	Envoie les opérations SQL en attente à la base, sans valider la transaction | 
+        | session.commit() |	Effectue le flush nécessaire puis valide la transaction |
+        | session.rollback() |	Annule les opérations de la transaction non validée |
+        
+
+3. Quelle est la différence entre flush() et commit() ?
+
+    - la difference entre un ``flush()`` et un ``commit()`` est que le commit push directement les données en DB
+
+    ### Corection 
+        | La distinction entre flush et commit est particulièrement importante : une opération envoyée à la base par flush() peut encore être annulée par un rollback(). |
+
+4. Pourquoi avons-nous utilisé ``with TestSession.begin() as session`` dans le test ?
+
+    - pour s'assurer de la fermeture de la session après les operation; au cas ou engine.dispose() viendrai à avoir un probleme
+
+    ### Correction
+
+    1. Il crée une nouvelle session.
+    2. Il ouvre une transaction.
+    3. À la sortie du bloc, il valide la transaction si tout s'est bien passé, l'annule en cas d'exception et ferme la session.
+
+        C'est donc une manière pratique de gérer automatiquement le cycle de vie de la session et de la transaction.
+
+        Une nuance importante : engine.dispose() n'est pas responsable de la fermeture de cette session. Il concerne la gestion du pool de connexions du moteur SQLAlchemy.
+
+
+
+# partie 4
+
+## EXercice A: Premiere migration
+
+1. Installer Alembic.
+    
+    - pour installer alembic on tape ``uv run add alembic`` on ajoute pas de ``--dev`` car c'est une depandance necessaire pour le maintien et l'volution de notre app en prod
+
+
+2. Initialiser l'environnement de migration.
+
+    - pour initialiser l'environnement de migration on tape la commande ``uv run alembic init alembic``
+
+
+3. Configurer env.py.
+
+    - pour a configuration de env.py on aura besoin de l'url de la db de notre ``Base `` pour exploiter les metadata de l'app , du dossier ``model`` qui contient tous les model de notre app, qui va fournir de maniere implicite les model l'attribut metadata  
+
+
+4. Générer la migration de la table tasks.
+
+    - pour generer les migrations de la table tasks on tape ``uv run alembic revision --autogenerate -m "gen migration"``
+
+
+5. Examiner le fichier généré.
+
+    - on observe l'id de la migration avec les fonctions ``upgrade()`` pour les operation effectuer et ``downgrade()`` pour le retour en arriere
+
+
+5. Appliquer la migration.
+
+    - pour appliquer les migration on tape la  commande ``uv run alembic revision upgrade head``
+
+6. Vérifier la révision actuelle.
+    - pour verifier la migration actuelle on tape le commande ``uv run alembic current``
