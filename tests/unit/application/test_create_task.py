@@ -13,9 +13,25 @@ class InMemoryTaskRepository:
         self.saved_tasks.append(task)
 
 
+class InMemoryTaskUnitWork:
+
+    def __init__(self):
+    
+        self.tasks=InMemoryTaskRepository()
+        self.commited=False
+        self.rollbacked=False
+
+    def commited(self):
+        self.commited=True
+
+    def rollbacked(self):
+        self.commited=True
+
+
+
 def test_create_task_save_task():
-    repository= InMemoryTaskRepository()
-    use_case=CreateTask(repository)
+    uow= InMemoryTaskUnitWork()
+    use_case=CreateTask(uow)
 
     task = use_case.execute(title="preparer la pipe line Ci",description="gerer le workflow de test",priority=Priority.HIGH)
 
@@ -23,8 +39,8 @@ def test_create_task_save_task():
     assert task.priority == Priority.HIGH
     assert task.status == TaskStatus.TODO
 
-    assert len(repository.saved_tasks) == 1
-    assert repository.saved_tasks[0] == task
+    assert len(uow.saved_tasks) == 1
+    assert uow.saved_tasks[0] == task
 
 
 def test_create_task_reject_empty_title_without_saving():

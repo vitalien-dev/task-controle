@@ -3,12 +3,16 @@ from task_control.modules.tasks.application.ports.task_repository import TaskRep
 
 from task_control.modules.tasks.domain.entities import Task,Priority
 
+from task_control.modules.tasks.application.ports.unite_of_work import TaskUnitOffWork  
+
 
 class CreateTask:
+
     """ Case d'utilisation : Créer un tache"""
 
-    def __init__(self,task_repository:TaskRepository) -> None:
-        self._task_repository=task_repository
+    def __init__(self,uow:TaskUnitOffWork) -> None:
+        self._uow=uow
+
 
     def execute(
         self,
@@ -18,10 +22,25 @@ class CreateTask:
     ) -> Task:
 
         # instanciation pour la creation de la task
-        task = Task(title,description,priority)
+        task = Task(
+            title=title,
+            description=description,
+            priority=priority
+            )
 
-        # on sauvegarde maintenant la task
-        return self._task_repository.save(task)
+        try:
+            saved_task=self._uow.task.save(task=task)
+
+            self._uow.commit()
+
+            return saved_task
+
+        except Exception:
+            self._uow.rollback()
+
+            raise
+
+        
 
       
 

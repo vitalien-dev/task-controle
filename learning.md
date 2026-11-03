@@ -103,7 +103,7 @@
 
 1. Installer Alembic.
     
-    - pour installer alembic on tape ``uv run add alembic`` on ajoute pas de ``--dev`` car c'est une depandance necessaire pour le maintien et l'volution de notre app en prod
+    - pour installer alembic on tape ``uv  add alembic`` on ajoute pas de ``--dev`` car c'est une depandance necessaire pour le maintien et l'volution de notre app en prod
 
 
 2. Initialiser l'environnement de migration.
@@ -113,7 +113,7 @@
 
 3. Configurer env.py.
 
-    - pour a configuration de env.py on aura besoin de l'url de la db de notre ``Base `` pour exploiter les metadata de l'app , du dossier ``model`` qui contient tous les model de notre app, qui va fournir de maniere implicite les model l'attribut metadata  
+    - pour a configuration de env.py on aura besoin de l'url de la db de notre ``Base`` pour exploiter les metadata de l'app , du dossier ``model`` qui contient tous les model de notre app, qui va fournir de maniere implicite les model l'attribut metadata  
 
 
 4. Générer la migration de la table tasks.
@@ -128,7 +128,10 @@
 
 5. Appliquer la migration.
 
-    - pour appliquer les migration on tape la  commande ``uv run alembic revision upgrade head``
+    - pour appliquer les migration on tape la  commande ``uv run alembic upgrade head``
 
 6. Vérifier la révision actuelle.
     - pour verifier la migration actuelle on tape le commande ``uv run alembic current``
+
+
+
