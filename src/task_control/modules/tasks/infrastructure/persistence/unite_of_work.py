@@ -1,7 +1,7 @@
 
 from sqlalchemy.orm import Session
 
-from task_control.modules.tasks.infrastructure.persistance.repository import SqlAlchemyTaskRepository
+from task_control.modules.tasks.infrastructure.persistence.repository import SqlAlchemyTaskRepository
 
 
 class SqlAlchemyTaskUnitOfWork:

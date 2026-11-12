@@ -5,7 +5,7 @@ from task_control.modules.tasks.application.ports.task_repository import TaskRep
 
 class TaskUnitOffWork(Protocol):
 
-    task = TaskRepository # on depose les taches accessible pendant le travil
+    task = TaskRepository # on depose les taches accessible pendant le travail
     def commit(self)  -> None :
 
         ...

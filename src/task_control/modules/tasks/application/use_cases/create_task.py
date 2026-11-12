@@ -26,7 +26,7 @@ class CreateTask:
             title=title,
             description=description,
             priority=priority
-            )
+        )
 
         try:
             saved_task=self._uow.task.save(task=task)

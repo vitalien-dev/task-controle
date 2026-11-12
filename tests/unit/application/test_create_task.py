@@ -11,20 +11,20 @@ class InMemoryTaskRepository:
 
     def save(self,task:Task)-> None:
         self.saved_tasks.append(task)
-
+        return task
 
 class InMemoryTaskUnitWork:
 
     def __init__(self):
     
-        self.tasks=InMemoryTaskRepository()
+        self.task=InMemoryTaskRepository()
         self.commited=False
         self.rollbacked=False
 
-    def commited(self):
+    def commit(self):
         self.commited=True
 
-    def rollbacked(self):
+    def rollback(self):
         self.commited=True
 
 
@@ -35,28 +35,32 @@ def test_create_task_save_task():
 
     task = use_case.execute(title="preparer la pipe line Ci",description="gerer le workflow de test",priority=Priority.HIGH)
 
+    assert task.id is None
     assert task.title == "preparer la pipe line Ci"
     assert task.priority == Priority.HIGH
     assert task.status == TaskStatus.TODO
 
-    assert len(uow.saved_tasks) == 1
-    assert uow.saved_tasks[0] == task
+    assert len(uow.task.saved_tasks) == 1
+    assert uow.task.saved_tasks[0] is task
+
+    assert uow.commited is True
+    assert uow.rollbacked is False
 
 
 def test_create_task_reject_empty_title_without_saving():
-    repository= InMemoryTaskRepository()
-    use_case=CreateTask(repository)
+    uow= InMemoryTaskUnitWork()
+    use_case=CreateTask(uow)
 
     with pytest.raises(ValueError):
         use_case.execute(title="   ")
 
-    assert repository.saved_tasks == []
+    assert uow.task.saved_tasks == []
 
 #-----------------
 
 def test_create_task_accepts_high_priority():
-    repository=InMemoryTaskRepository()
-    use_case=CreateTask(repository)
+    uow=InMemoryTaskUnitWork()
+    use_case=CreateTask(uow)
 
     task=use_case.execute(title="First title",description="cette description est la pour nous",priority=Priority.HIGH)
 
@@ -64,8 +68,8 @@ def test_create_task_accepts_high_priority():
     assert task.description == "cette description est la pour nous"
     assert isinstance(task,Task)
 
-    assert len(repository.saved_tasks) == 1
-    assert repository.saved_tasks[0] is task
+    assert len(uow.task.saved_tasks) == 1
+    assert uow.task.saved_tasks[0] is task
 
 
 

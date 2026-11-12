@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from task_control.modules.tasks.domain.entities import Task ,Priority
 from task_control.modules.tasks.application.use_cases.create_task import CreateTask  
 from task_control.modules.tasks.application.ports.task_repository import TaskRepository
-from task_control.modules.tasks.infrastructure.persistance.models import TaskModel
+from task_control.modules.tasks.infrastructure.persistence.models import TaskModel
 
 
 class SqlAlchemyTaskRepository:

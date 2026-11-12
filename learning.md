@@ -135,3 +135,119 @@
 
 
 
+# partie 5
+
+## EXercice A: Analyse de code
+
+1. Je veux que tu distingues clairement le rôle de ``SessionLocal`` et celui de ``session``.
+
+    - ``SessionLocal`` est la classe qui fabrique une ``session``, ainsi session est une instance de SessionLocal qui va etre passé a chaque requette vers le serveur 
+
+
+## Exercice B: Comprendre yield
+
+1. Pourquoi utilisons nous ``yield`` plutot que ``return``
+
+    - ``yield`` est preféré à ``return`` parcequ'il ne renvoie qu'une seule fois une connection database à l'appel
+
+2. Quand le bloc ``finally`` sera-t-il exécuté ?
+
+    - finally sera toujours executer a chaque passe au try , pour liberer la ressource 
+
+3. Que se passe-t-il si une exception est déclenchée pendant l'exécution de la route ?
+
+    - si une exception est declanché elle sera passé sous silence car il y'a pas de raise pour faire remonter l'erreur 
+
+
+## Exercice C — Injection de dépendances
+
+1. Pourquoi la deuxième approche est-elle préférable dans notre architecture ? Identifie au moins trois avantages.
+
+    - la deuxieme approche est preferable parceque:
+
+        * elle ne depand pas de sqlachemy
+        * l'injection de depandance permet egalement de s'extraire de cette depandace vis à vis des technologie
+        * en consequence on aura une maintenance facile  
+
+
+## Exercice D — Diagnostic d'une erreur
+
+1. après une erreur SQLAlchemy pendant un flush().
+    Quelles conséquences cela peut-il avoir si nous essayons de réutiliser la même session ?
+
+    * la transaction etant consus suivant un pricipe d'atomicité, toute les operation precedante seront annulé
+        et si l'on utilise la meme session elle ne sera plus valide parceque elle aura deja été revoqué du fait de l'erreur. donc ceci voudrai dire que chaque requette à sa propre session creeé? je veut comprendre 
+
+    
+
+
+
+# partie 6:  évaluation pédagogique
+Nous avons maintenant abordé plusieurs nouveaux concepts. Je veux vérifier que tu ne te contentes pas de suivre les instructions, mais que tu comprends les décisions architecturales et sécuritaires.
+
+
+## Exercice A — Comprendre bcrypt
+Explique avec tes propres mots :
+
+1. Pourquoi stocker un mot de passe en clair est-il dangereux ?
+    - en cas de pirate de la db les mdp pourrait etre recuperer et utilisé à de fin malsaine
+
+2. Pourquoi deux utilisateurs ayant exactement le même mot de passe peuvent-ils avoir deux hash différents ?
+    - ils pourrait avoir deux hash different car un ``sel`` different est generé par bcryp à chaque operation et ajouter au hash 
+
+3. Pourquoi ne pouvons-nous pas simplement comparer le hash nouvellement généré avec celui enregistré ?
+    - parcequ'il sera automatiquement different de ce qui est stoké du fait du ``sel``
+
+4. Quelle est la différence entre hash() et verify() ?
+    - hash a pour role de hasher le mdp tandisque verify va plutot comparer l'exactitude
+
+
+## Exercice B — Architecture hexagonale
+
+1. Pourquoi avons-nous créé un port PasswordHasher au lieu d'importer directement bcrypt dans CreateUser ?
+    - pour eviter de depandre de bcrypt
+
+Imagine que nous décidions demain de remplacer bcrypt par Argon2id.
+
+2. Quels éléments de notre architecture devraient changer ? Lesquels devraient rester identiques ?
+    - l'element qui devrai changer est l'adaptateur ``bcrypt_passwor_hash`` et ce ui devrai rester est le port ou encore la facade password_hasher
+
+
+## Exercice C — Sécurité des données
+Voici deux réponses possibles de notre API.
+
+Réponse A :
+{
+  "id": 1,
+  "email": "user@example.com",
+  "hashed_password": "$2b$12$..."
+}
+
+Réponse B :
+{
+  "id": 1,
+  "email": "user@example.com"
+}
+
+1. Pourquoi la réponse B est-elle préférable, même si le mot de passe est déjà haché ?
+    - parceque le mdp peut toujours etres exploité s'il tombe entre les mauvaise main, autant ne pas l'envoyé   c'est toujours dangereux d'exposer le payload au client puiqu'il est uniquement signé
+
+
+## Exercice D — Diagnostic d'un problème métier
+Supposons que deux requêtes arrivent presque simultanément.
+
+Elles essaient toutes les deux de créer un compte avec :
+user@example.com
+
+1. Les deux vérifications get_by_email() peuvent-elles renvoyer None avant que l'une des inscriptions soit enregistrée ?
+    - oui 
+
+2. Explique ensuite pourquoi unique=True dans UserModel reste indispensable.
+    - pour garantir l'unicité au niveau de la db au cas ou sa echaperait à ``get_by_email()``
+
+    
+## Exercice E — Tests
+Écris au moins trois tests supplémentaires :
+- L'inscription d'un utilisateur doit enregistrer un hash et non son mot de passe original.
+- Une adresse e-mail déjà enregistrée doit provoquer EmailAlreadyRegistered.
+- Un mot de passe dépassant 72 octets doit être refusé.

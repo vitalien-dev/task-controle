@@ -11,7 +11,7 @@ class TaskStatus(str,Enum):
     IN_PROGRESS="in_progress"
     DONE="done"
 
-@dataclass #pour eviter le code verbeux et de permetre à python  de gerer automatiquement __repr__ init__ etc..
+@dataclass # pour eviter le code verbeux et de permetre à python  de gerer automatiquement __repr__ init__ etc..
 class Task:
     title:str
     description:str=""
@@ -27,7 +27,7 @@ class Task:
 
         self.tilte=self.title.strip()
 
-        if not self.title:
+        if not self.title or not self.title.strip():
             raise ValueError(" Le titre est obligatoire.")
 
         if len(self.tilte) > 120:
@@ -57,7 +57,7 @@ class Task:
 
 
     def renam(self,new_title:str) -> None:
-        """ Cette methode permet à l'user de modifier ses taches"""
+        """ Cette methode permet à l'user de modifier ses taches """
         if not isinstance(new_title,str):
             raise TypeError("vous devez entrer uniquement les caracteres")
 
@@ -76,5 +76,5 @@ class Task:
 
         
 
-
+        
          

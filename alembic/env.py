@@ -6,11 +6,12 @@ from sqlalchemy import pool
 from alembic import context
 
 # on importe la base et l'url de la db
-from task_control.modules.tasks.infrastructure.persistance.base import Base #afin d'utiliser l'attribue metadata qui contient la description des tables sqlalchemy
-from task_control.modules.tasks.infrastructure.persistance.database import DATABASE_URL
+from task_control.shared.infrastructure.persistence.base import Base #afin d'utiliser l'attribue metadata qui contient la description des tables sqlalchemy
+from task_control.shared.infrastructure.persistence.database import DATABASE_URL
 
 # on importe egalement les models qu'on va stoker en db
-from task_control.modules.tasks.infrastructure.persistance import models # pour enregistrer les class des models dans les metadata de Base. Ceci ce fait implicitement  
+from task_control.modules.tasks.infrastructure.persistence import  models as task_models # pour enregistrer les class des models dans les metadata de Base. Ceci ce fait implicitement  
+from task_control.modules.identity.infrastructure.persistance import models as identity_models    
 
 
 # this is the Alembic Config object, which provides

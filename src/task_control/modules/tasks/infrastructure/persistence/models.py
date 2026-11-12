@@ -2,7 +2,7 @@ from sqlalchemy import String,Text,DateTime
 from sqlalchemy.orm import mapped_column,Mapped
 from datetime import datetime
 
-from task_control.modules.tasks.infrastructure.persistance.base import Base
+from task_control.shared.infrastructure.persistence.base import Base
 
 
 class TaskModel(Base):

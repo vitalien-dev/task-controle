@@ -3,6 +3,7 @@ from fastapi import FastAPI
 
 
 from task_control.modules.tasks.presentation.routes.task_routes import  router as task_route
+from task_control.modules.identity.presentation.routes.identity_routes import  router as identity_route
 
 
 app=FastAPI(
@@ -12,4 +13,6 @@ app=FastAPI(
 )   
 
 app.include_router(task_route,prefix="/api/v1")
+
+app.include_router(identity_route,prefix="/api/v1")
 
